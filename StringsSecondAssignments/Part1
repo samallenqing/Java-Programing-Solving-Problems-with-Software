@@ -1,0 +1,55 @@
+
+/**
+ * Write a description of Part1 here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+public class Part1 {
+    
+  public int FindStopCodon(String DNA, int StartIndex, String stopCodon){
+   int StopIndex = DNA.indexOf(stopCodon, StartIndex + 3);
+   int length = StopIndex - StartIndex;
+   if (length % 3 == 0 ){
+    return StopIndex;  
+    }
+   else {
+      StopIndex = DNA.indexOf(stopCodon, StopIndex + 1);
+    }
+    return -1;
+  }
+
+
+  public String FindGene(String DNA){
+    int StartIndex = DNA.indexOf("ATG");
+    
+    if (StartIndex == -1){
+       return "There is no gene in this DNA.";
+    }
+    int TAAIndex = FindStopCodon(DNA, StartIndex, "TAA");
+    int TGAIndex = FindStopCodon(DNA, StartIndex, "TGA");
+    int TAGIndex = FindStopCodon(DNA, StartIndex, "TAG");
+    int CurrentIndex = 0;
+    if ( TAAIndex == -1 || TGAIndex != -1 && TGAIndex < TAAIndex){
+        CurrentIndex = TGAIndex;
+    }
+    else{
+        CurrentIndex = TAAIndex;    
+    }
+    if (CurrentIndex == -1 || TAGIndex != -1 && TAGIndex < CurrentIndex){
+       CurrentIndex = TAGIndex; 
+    }
+    if (CurrentIndex == -1){
+       return "There is no gene in this DNA.";  
+    }
+    
+    return  DNA.substring(StartIndex, CurrentIndex + 3);
+    }
+
+  public void test() {
+         String a = "XXATGTGTGATTTTTAG";
+         System.out.println("For the following DNA-----" + a);
+         String f = FindGene(a);
+         System.out.println("Found gene(s) as the following:" + f);
+  }
+}
