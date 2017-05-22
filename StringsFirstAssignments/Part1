@@ -1,0 +1,42 @@
+
+/**
+ * Write a description of Part1 here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+public class Part1 {
+
+    public String findSimpleGene(String dna) {
+    int StartIndex  =   dna.indexOf("ATG");
+    int EndIndex    =   dna.indexOf("TAA", StartIndex + 3);
+    while ( EndIndex != -1) {
+    
+        if  ((EndIndex - StartIndex) % 3 == 0) {
+            return dna.substring(StartIndex, EndIndex + 3);
+        }
+        else {
+           EndIndex =  dna.indexOf("TAA", EndIndex + 1);
+        }
+    }
+    return "There is no more gene";
+    }
+
+    public void testFindGeneSimple() {
+        //             v  v  v  v  v
+        String dna = "AATGCGTAATTTTTAA";
+        System.out.println("DNA strand is " + dna);
+        String gene = findSimpleGene(dna);
+        System.out.println("Gene is " + gene);
+        //       v  v  v  v  v  v  v  v
+        dna = "CGATGGTTGATAAGCCTAAGCTATAA";
+        System.out.println("DNA strand is " + dna);
+        gene = findSimpleGene(dna);
+        System.out.println("Gene is " + gene);
+        //       v  v  v  v  v  v  v  v
+        dna = "CGATGGTTGATAAGCCTAAGCTAAA";
+        System.out.println("DNA strand is " + dna);
+        gene = findSimpleGene(dna);
+        System.out.println("Gene is " + gene);
+    }
+}
