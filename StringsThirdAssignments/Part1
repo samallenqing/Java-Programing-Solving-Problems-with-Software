@@ -1,0 +1,104 @@
+
+/**
+ * Write a description of Part1 here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+import edu.duke.*;
+import java.io.File;
+public class Part1 {
+ public int FindStopCodon(String DNA, int StartIndex, String stopCodon){
+   int StopIndex = DNA.indexOf(stopCodon, StartIndex + 3);
+   int length = StopIndex - StartIndex;
+   while (StopIndex != -1 ) {
+   if (length % 3 == 0 ){
+    return StopIndex;  
+    }
+   else {
+      StopIndex = DNA.indexOf(stopCodon, StopIndex + 1);
+    }
+   }
+    return -1;
+  }
+
+
+  public String FindGene(String DNA, int next){
+    int StartIndex = DNA.indexOf("ATG", next);
+    
+    if (StartIndex == -1){
+       return"";
+    }
+    int TAAIndex = FindStopCodon(DNA, StartIndex, "TAA");
+    int TGAIndex = FindStopCodon(DNA, StartIndex, "TGA");
+    int TAGIndex = FindStopCodon(DNA, StartIndex, "TAG");
+    int CurrentIndex = 0;
+    if ( TAAIndex == -1 || TGAIndex != -1 && TGAIndex < TAAIndex){
+        CurrentIndex = TGAIndex;
+    }
+    else{
+        CurrentIndex = TAAIndex;    
+    }
+    if (CurrentIndex == -1 || TAGIndex != -1 && TAGIndex < CurrentIndex){
+       CurrentIndex = TAGIndex; 
+    }
+    if (CurrentIndex == -1){
+       return"";  
+    }
+    return  DNA.substring(StartIndex, CurrentIndex + 3);
+    }
+    
+  public StorageResource GetAllGenes (String DNA){
+      StorageResource GenenList = new StorageResource();
+      int StartIndex = 0;
+      int CurrentGeneIndex = 0;
+      while (true){
+          String CurrentGene = FindGene(DNA, StartIndex);
+          if ( CurrentGene.isEmpty()){
+              break;
+            }
+          GenenList.add(CurrentGene);
+          StartIndex = DNA.indexOf(CurrentGene, StartIndex) + CurrentGene.length();
+    }
+    return GenenList;
+   }
+  public void test() {
+       FileResource a = new FileResource("1.txt");  
+       StorageResource x = new StorageResource();
+       String f = a.asString();
+       x = GetAllGenes(f);
+       float Rate = 0;
+    
+        for (String c : x.data()){ 
+            System.out.println(c);
+            //if ( 9 - c.length() > 0){
+            //System.out.println("Longer than 9" +  c);
+          
+             Rate = cgRatio(c);
+             System.out.println("This gene cgRation is    "  + Rate);
+        }
+  
+}
+
+    public float cgRatio(String DNA){
+     int c = 0;
+     int g = 0;
+     float cou = 0;
+     float coun = 0;
+     float count = 0;
+     float length = 0;
+     float r = 0;
+       while (c != -1){
+           c = DNA.indexOf("C",c+1);
+           cou = cou + 1;
+        }
+        while (g != -1){
+           g = DNA.indexOf("G",g+1);
+           coun= coun + 1;
+        }
+        count = cou + coun-2;
+        length = DNA.length();
+           r = count/length;
+           return r;
+    }
+}
